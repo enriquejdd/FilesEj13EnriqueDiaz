@@ -44,4 +44,27 @@ public class ServicioFicheroJSON {
         }
 
     }
+    
+    public static ArrayList<App> LeerArchivosJSON(String nomArchivo){
+        ArrayList<App> listaJSON = new ArrayList<>();
+        
+        ObjectMapper mapeador = new ObjectMapper();
+        
+        ArrayList<App> catalogo = mapeador.readValue(new File("catalogoMuebles.json"),
+                    mapeador.getTypeFactory().constructCollectionType(ArrayList.class, MuebleVO.class));
+        System.out.println("---- Catálogo de Muebles ----");
+        for (MuebleVO muebleVO : catalogo) {
+            System.out.println(muebleVO);
+        }
+        System.out.println("---- Catálogo de Muebles ----");
+        
+        ArrayList<EnvioMuebles> envios = mapeador.readValue(new File("catalogoEnvios.json"),
+                    mapeador.getTypeFactory().constructCollectionType(ArrayList.class, EnvioMuebles.class));
+        System.out.println("\n");
+        System.out.println("---- Catálogo de Envíos ----");
+        for (EnvioMuebles envio : envios) {
+            System.out.println(envio);
+        }
+        System.out.println("---- Catálogo de Envíos ----");
+    }
 }
