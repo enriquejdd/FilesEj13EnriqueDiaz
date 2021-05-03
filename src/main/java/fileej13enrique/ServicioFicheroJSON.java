@@ -5,6 +5,7 @@
  */
 package fileej13enrique;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.File;
@@ -27,44 +28,49 @@ public class ServicioFicheroJSON {
         mapeador.writeValue(new File(rutaYNombreArchivo), arrayListApps);
     }
 
-    // Crea tantos ficheros JSON como el tamaño del array que se le pase. Usaran la ruta del archivo pero el nombre será el de la app.
-    public static void crearListaJSONporApp(App app, String rutaYNombreArchivo) throws IOException {
-
-        String rutaArchivo = rutaYNombreArchivo + "/" + app.getNombre() + ".json";
+    // Crea tantos ficheros JSON como el tamaño del array que se le pase por parametros. 
+    // Le pasamos la ruta del archivo ya que el nombre de este dependerá de cada app.
+    public static void crearListaJSONporApp(App app, String rutaArchivo) {
+        String Archivo = rutaArchivo + "/" + app.getNombre() + ".json";
         ObjectMapper mapeador = new ObjectMapper();
         mapeador.configure(SerializationFeature.INDENT_OUTPUT, true);
         try {
             //llamamos al método writeValue que se le pasa como parametros
             //un constructor new File con el idFichero que pasamos anteriormente
             //y la lista de donde sacará los objetos en cuestión
-            mapeador.writeValue(new File(rutaArchivo), app);
+            mapeador.writeValue(new File(Archivo), app);
         } catch (IOException ex) {
             Logger.getLogger(ServicioFicheroJSON.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Error");
         }
 
     }
-    
-    public static ArrayList<App> LeerArchivosJSON(String nomArchivo){
-        ArrayList<App> listaJSON = new ArrayList<>();
-        
-        ObjectMapper mapeador = new ObjectMapper();
-        
-        ArrayList<App> catalogo = mapeador.readValue(new File("catalogoMuebles.json"),
-                    mapeador.getTypeFactory().constructCollectionType(ArrayList.class, MuebleVO.class));
-        System.out.println("---- Catálogo de Muebles ----");
-        for (MuebleVO muebleVO : catalogo) {
-            System.out.println(muebleVO);
+
+    // Leemos el String nomArchivo para crear una arrayList con los datos y la devolvemos
+    public static ArrayList<App> leerArchivosJSON(String nomArchivo) {
+        ArrayList<App> listaAppsJSON = new ArrayList<>();
+
+        try {
+            ObjectMapper mapeador = new ObjectMapper();
+            listaAppsJSON = mapeador.readValue(new File(nomArchivo),
+                    mapeador.getTypeFactory().constructCollectionType(ArrayList.class, App.class));
+        } catch (IOException ex) {
+            Logger.getLogger(ServicioFicheroJSON.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("---- Catálogo de Muebles ----");
-        
-        ArrayList<EnvioMuebles> envios = mapeador.readValue(new File("catalogoEnvios.json"),
-                    mapeador.getTypeFactory().constructCollectionType(ArrayList.class, EnvioMuebles.class));
-        System.out.println("\n");
-        System.out.println("---- Catálogo de Envíos ----");
-        for (EnvioMuebles envio : envios) {
-            System.out.println(envio);
-        }
-        System.out.println("---- Catálogo de Envíos ----");
+        return listaAppsJSON;
     }
+
+    // LE pasamos por parámetros un ficehro JSON el cual convierte en una APP.
+    public static App leerAppJSON(String archivoJSON) {
+
+        App appJSON = new App();
+        try {
+            ObjectMapper mapeador = new ObjectMapper();
+            appJSON = mapeador.readValue(new File(archivoJSON), App.class);
+        } catch (IOException ex) {
+            Logger.getLogger(ServicioFicheroJSON.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return appJSON;
+    }
+
 }

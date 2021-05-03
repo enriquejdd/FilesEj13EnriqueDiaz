@@ -5,6 +5,9 @@
  */
 package fileej13enrique;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -28,6 +31,8 @@ public class App {
     private String descripcion;
     private Double tamanioKB;
     @XmlJavaTypeAdapter(value = LocalDateAdaptador.class)
+    // Le da formato a la fecha para cuadno lo añada a JSON
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate fecCreacion;
 
     public App() {
@@ -43,10 +48,12 @@ public class App {
         contador++;
     }
 
+    @JsonSerialize(using = LocalDateSerializer.class)
     public LocalDate getFecCreacion() {
         return fecCreacion;
     }
 
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     public void setFecCreacion(LocalDate fecCreacion) {
         this.fecCreacion = fecCreacion;
     }

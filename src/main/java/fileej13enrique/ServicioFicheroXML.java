@@ -39,6 +39,7 @@ public class ServicioFicheroXML {
         serializador.marshal(apps, new File(rutaArchivo));
     }
     
+    // Permite leer el archivo que le pasemos por parametro
     public static void leerFicherosXML(String archivoLeer) throws JAXBException{
         // Crea el contexto JAXB 
         JAXBContext contexto = JAXBContext.newInstance(AppXML.class);
